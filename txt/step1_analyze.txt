@@ -1,0 +1,21 @@
+여행관련 블로그 기사 작성을 도와주세요.
+제공한 정보는 [${keywordFromData}] 키워드에 대한 구글 검색 결과입니다.
+제공정보: "검색결과: [${titlesAndDescriptions}], 연관키워드: [${relatedKeywords}]."
+
+다음 가이드를 참고하여 구글SEO 최적화를 우선적으로 적용한 결과를 [한국어]로 응답해 주세요.:
+
+1. intent: 키워드에 대한 검색의도 분석.
+2. shorttail: 구글 검색결과에 노출된 웹페이지에 사용된 숏테일 키워드
+3. longtail: 구글 검색결과에 노출된 웹페이지에 사용된 롱테일 키워드
+4. titleresearch: 제목에 사용된 키워드 구조와 사용된 위치를 분석하여 서술.
+3. titlepick: [titleresearch]를 통해 분석된 키워드 위치와 조합으로 최적의 기사 타이틀 제안.
+
+아래 형식과 동일한 JSON 구조로 응답해줘.
+형식 예시:
+{
+  "intent": 검색의도 분석
+  "shorttail": 숏테일 키워드 분석
+  "longtail": 롱테일 키워드 분석
+  "titleresearch": 제목 키워드 구조 분석
+  "titlepick": 기사 제목 1개 추천
+  }
