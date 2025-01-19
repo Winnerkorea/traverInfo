@@ -1,19 +1,19 @@
-const fs = require('fs');
-const path = require('path');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-require('dotenv').config(); // .env 파일에서 환경 변수 불러오기
+const fs = require("fs");
+const path = require("path");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+require("dotenv").config(); // .env 파일에서 환경 변수 불러오기
 
 // 환경 변수에서 API 키를 가져옵니다.
 const apiKey = process.env.API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
 
 async function generateContentWithRetries(prompt, retries = 10) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
 
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const result = await model.generateContent([prompt], {
-        response_mime_type: 'text/plain', // 응답을 텍스트 형식으로 받음
+        response_mime_type: "text/plain", // 응답을 텍스트 형식으로 받음
       });
 
       const response = result.response;
@@ -24,7 +24,7 @@ async function generateContentWithRetries(prompt, retries = 10) {
       if (jsonString) {
         jsonString = jsonString[0]; // 매치된 JSON 배열만 사용
       } else {
-        throw new Error('유효한 JSON 응답을 찾을 수 없습니다.');
+        throw new Error("유효한 JSON 응답을 찾을 수 없습니다.");
       }
 
       const responseData = JSON.parse(jsonString);
@@ -36,15 +36,15 @@ async function generateContentWithRetries(prompt, retries = 10) {
       ) {
         return responseData;
       } else {
-        throw new Error('유효한 응답 형식이 아닙니다.');
+        throw new Error("유효한 응답 형식이 아닙니다.");
       }
     } catch (error) {
       console.error(`API 요청 실패 ${attempt + 1}/${retries}:`, error);
       if (attempt < retries - 1) {
-        console.log('10초 후 다시 시도합니다...');
+        console.log("10초 후 다시 시도합니다...");
         await new Promise((resolve) => setTimeout(resolve, 10000));
       } else {
-        console.log('10회 시도 후 실패. 코드를 종료합니다.');
+        console.log("10회 시도 후 실패. 코드를 종료합니다.");
         process.exit(1);
       }
     }
@@ -53,8 +53,8 @@ async function generateContentWithRetries(prompt, retries = 10) {
 
 async function processOutline(outlineData, outlineFilePath) {
   const questionTemplate = fs.readFileSync(
-    path.join(__dirname, 'txt', 'step3_contents.txt'),
-    'utf8'
+    path.join(__dirname, "txt", "step3_contents.txt"),
+    "utf8"
   );
 
   for (let i = 0; i < outlineData.sections.length; i++) {
@@ -69,8 +69,8 @@ async function processOutline(outlineData, outlineFilePath) {
 
     // 프롬프트 생성
     const prompt = questionTemplate
-      .replace('[section_title]', section[sectionKey])
-      .replace('[section_description]', section[contentsKey]);
+      .replace("[section_title]", section[sectionKey])
+      .replace("[section_description]", section[contentsKey]);
 
     const responseData = await generateContentWithRetries(prompt);
 
@@ -94,24 +94,24 @@ async function processOutline(outlineData, outlineFilePath) {
 
 async function run() {
   const today = fs
-    .readFileSync(path.join(__dirname, 'txt', 'today.txt'), 'utf8')
+    .readFileSync(path.join(__dirname, "txt", "today.txt"), "utf8")
     .trim();
   const keywordData = JSON.parse(
-    fs.readFileSync(path.join(__dirname, 'keyword', 'keyword.json'), 'utf8')
+    fs.readFileSync(path.join(__dirname, "keyword", "keyword.json"), "utf8")
   );
   const title = keywordData.title;
 
   const outlineFilePath = path.join(
     __dirname,
-    'results',
+    "results",
     today,
     `${title}_outline_${today}.json`
   );
-  const outlineData = JSON.parse(fs.readFileSync(outlineFilePath, 'utf8'));
+  const outlineData = JSON.parse(fs.readFileSync(outlineFilePath, "utf8"));
 
   const updatedOutlineData = await processOutline(outlineData, outlineFilePath);
 
-  const articlesDir = path.join(__dirname, 'articles');
+  const articlesDir = path.join(__dirname, "articles");
 
   // 폴더가 없으면 생성, 있으면 내용 삭제
   if (!fs.existsSync(articlesDir)) {
@@ -122,7 +122,7 @@ async function run() {
     });
   }
 
-  const articleFilePath = path.join(articlesDir, 'article.json');
+  const articleFilePath = path.join(articlesDir, "article.json");
   fs.writeFileSync(
     articleFilePath,
     JSON.stringify(updatedOutlineData, null, 2)

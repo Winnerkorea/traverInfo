@@ -303,6 +303,16 @@ fs.readFile(JSON_FILE_PATH, "utf8", async (err, data) => {
   });
   POST_CONTENT += `</ul></div>`;
 
+  POST_CONTENT += `
+  <div class="eg-affiliate-banners" data-program="kr-expedia" data-network="pz" data-layout="leaderboard" data-image="sailing" data-message="bye-bye-bucket-list-hello-adventure" data-link="stays" data-camref="1011l3xtXH" data-pubref=""></div>
+  <script class="eg-affiliate-banners-script" src="https://affiliates.expediagroup.com/products/banners/assets/eg-affiliate-banners.js"></script>
+`;
+
+  POST_CONTENT += `
+  <div class="eg-widget" data-widget="search" data-program="kr-hcom" data-lobs="" data-network="pz" data-camref="1101l3xrSx"></div>
+  <script class="eg-widgets-script" src="https://affiliates.expediagroup.com/products/widgets/assets/eg-widgets.js"></script>
+`;
+
   // 관련 포스팅 링크 추가
   POST_CONTENT += relatedPostsContent;
 
